@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "canvas": "^2.6.1",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "docx": "^5.2.1",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "image-data-uri": "^2.0.1",
+    "jade": "~1.11.0",
+    "jsdom": "^16.2.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.20",
+    "morgan": "~1.9.1",
+    "node-tesseract-ocr": "^2.0.0",
+    "resize-base64": "^1.0.12",
+    "string-similarity": "^4.0.1"
+  }
+}
