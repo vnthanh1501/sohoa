@@ -17,7 +17,7 @@
     "jade": "~1.11.0",
     "jsdom": "^16.2.2",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.20",
+    "mongoose": "^5.9.21",
     "morgan": "~1.9.1",
     "node-tesseract-ocr": "^2.0.0",
     "resize-base64": "^1.0.12",
