@@ -11,7 +11,7 @@ exports.convertOne = async (req, res) => {
         var elements = {}
         await ImageDataURI.outputFile(req.body.dataURL, './src/element.png')
         await er.resizeDocument('./src/element.png', 700)
-        await tesseract.recognize('./src/element.png', { lang: 'vie-best', oem: 1, psm: 3 })
+        await tesseract.recognize('./src/element.png', { lang: 'vie', oem: 1, psm: 3 })
             .then(text => {
                 elements['result'] = reconstruct(text.substring(0, text.length - 1))
                 elements['notify'] = { type: 'success', message: 'Xử lý dữ liệu thành công' }
@@ -66,7 +66,7 @@ exports.convert = async (req, res) => {
         if (fs.existsSync('./src/stamp.png')) er.getStamp('./src/stamp.png')
         await Promise.all(parts.map(async (part) => {
             await tesseract.recognize('./src/' + part + '.png', {
-                lang: (['org', 'tna', 'sns', 'id'].includes(part)) ? 'vie-best' : 'vie-fast',
+                lang: 'vie',
                 preserve_interword_spaces: (part.match(/content/)) ? 1 : 0,
                 oem: 1,
                 psm: (['sns', 'id', 'org', 'nabrand'].includes(part)) ? 11 : 3, //3 for normal, 7 for single line   
