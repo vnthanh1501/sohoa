@@ -1,31 +1,32 @@
-const userModel = require('../models/user')
+const userModel = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 
 const secret = 'mysecretsshhh'
 module.exports = {
-    register: (req, res) => {
+    post_create: (req, res) => {
         userModel.create({
             username: req.body.username,
             password: req.body.password,
             role: req.body.role
-            // username: 'admin',
-            // password: 'admin'
         },
             (err, result) => {
                 if (err) {
-                    console.log('Đã xảy ra lỗi: ' + err.message)
-                    res.send({ type: 'danger', message: "Đã xảy ra lỗi: " + err.message })
+                    console.log('An error has occurred: ' + err.message)
+                    res.send({ type: 'danger', message: "An error has occurred: " + err.message })
                 }
                 else {
                     console.log('OK')
-                    res.send({ type: 'success', message: "Đã tạo thành công tài khoản: " + req.body.username })
+                    res.send({ type: 'success', message: "The user has been created: " + req.body.username })
                 }
             })
+    },
+    logout: (req, res) => {
+        res.clearCookie('token').end()
     },
     checkToken: (req, res) => {
         res.status(200).send({ username: req.username, role: req.role })
     },
-    getInfo: (req, res) => {
+    get_info: (req, res) => {
         res.send({ username: req.username, role: req.role })
     },
     authenticate: async (req, res) => {
@@ -67,40 +68,37 @@ module.exports = {
             }
         });
     },
-    logout: (req, res) => {
-        res.clearCookie('token').end()
-    },
-    getAll: (req, res) => {
+    get_all: (req, res) => {
         userModel.find({}, (err, result) => {
             res.json(result)
         })
     },
-    update: (req, res) => {
+    put_changePassword: (req, res) => {
         userModel.find({ username: req.params.id }, function (err, user) {
             if (err) {
-                res.send({ type: 'danger', message: 'Dữ liệu nhập có vấn đề' })
-                console.log('Đã xảy ra lỗi: ' + err.message)
+                res.send({ type: 'danger', message: 'Input problem' })
+                console.log('An error has occurred: ' + err.message)
             }
 
             user[0].password = req.body.password;
             user[0].save(function (err) {
                 if (err) {
-                    res.send({ type: 'danger', message: 'Dữ liệu nhập có vấn đề' })
-                    console.log('Đã xảy ra lỗi: ' + err.message)
+                    res.send({ type: 'danger', message: 'Input problem' })
+                    console.log('An error has occurred: ' + err.message)
                 }
-                res.send({ type: 'success', message: 'Dữ liệu đã được cập nhật' })
-                console.log('Mật khẩu tài khoản: ' + req.params.id + ' đã được chỉnh sửa')
+                res.send({ type: 'success', message: 'The password has been updated' })
+                console.log('The password of the user: ' + req.params.id + ' has been updated')
             });
         });
     },
-    delete: (req, res) => {
+    delete_remove: (req, res) => {
         userModel.deleteMany({ username: req.params.id }, (err, result) => {
             if (err) {
-                res.send({ type: 'danger', message: 'Không thể xóa dữ liệu' })
-                console.log('Đã xảy ra lỗi: ' + err.message)
+                res.send({ type: 'danger', message: 'Cannot remove the user' })
+                console.log('An error has occurred: ' + err.message)
             }
             else {
-                res.send({ type: 'success', message: 'Xóa dữ liệu thành công' })
+                res.send({ type: 'success', message: 'The user has been removed' })
             }
         })
     },

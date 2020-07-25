@@ -8,9 +8,9 @@ userModel.create({
 },
     (err, result) => {
         if (err) {
-            console.log('Đã xảy ra lỗi: ' + err.message)
+            console.log('An error has occurred: ' + err.message)
         }
         else {
-            console.log('Đã tạo thành công user: admin với password: admin')
+            console.log('A new user has been created: admin - password: admin')
         }
     })

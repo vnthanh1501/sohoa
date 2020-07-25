@@ -5,7 +5,7 @@ function isUpperCase(str) {
 }
 
 // Create document
-exports.generateDocx = async (req, res) => {
+exports.generateDoc = async (req, res) => {
     const doc = new Document()
     var document = []
     var firstRow = []

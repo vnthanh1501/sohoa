@@ -1,8 +1,8 @@
-process.env.TESSDATA_PREFIX = './routes/modules/tesseract/tessdata'
+process.env.TESSDATA_PREFIX = './controllers/modules/tesseract/tessdata'
 const tesseract = require("node-tesseract-ocr")
 const ImageDataURI = require('image-data-uri')
 const fs = require("fs")
-const er = require("./elements-recognition")
+const cr = require("./component-recognition")
 const resizebase64 = require('resize-base64')
 var stringSimilarity = require('string-similarity')
 
@@ -10,7 +10,7 @@ exports.convertOne = async (req, res) => {
     try {
         var elements = {}
         await ImageDataURI.outputFile(req.body.dataURL, './src/element.png')
-        await er.resizeDocument('./src/element.png', 700)
+        await cr.resizeDocument('./src/element.png', 700)
         await tesseract.recognize('./src/element.png', { lang: 'vie', oem: 1, psm: 3 })
             .then(text => {
                 elements['result'] = reconstruct(text.substring(0, text.length - 1))
@@ -51,11 +51,11 @@ exports.convert = async (req, res) => {
             numPage++
         }
 
-        // const parts = await er.findTop('./src/' + 0 + name)
+        // const parts = await cr.findTop('./src/' + 0 + name)
         if (numPage === 1) {
-            parts = await er.findTop('./src/content.png', false)
+            parts = await cr.findTop('./src/content.png', false)
         } else {
-            parts = (await er.findTop('./src/content-0.png', true)).concat(await er.findBot('./src/content-9999.png', true))
+            parts = (await cr.findTop('./src/content-0.png', true)).concat(await cr.findBot('./src/content-9999.png', true))
             for (var i = 1; i < dataURLs.length - 1; i++) {
                 parts.push('content-' + i)
             }
@@ -63,7 +63,7 @@ exports.convert = async (req, res) => {
         // fs.unlinkSync('./src/' + name)
 
         elements['content'] = ''
-        if (fs.existsSync('./src/stamp.png')) er.getStamp('./src/stamp.png')
+        if (fs.existsSync('./src/stamp.png')) cr.getStamp('./src/stamp.png')
         await Promise.all(parts.map(async (part) => {
             await tesseract.recognize('./src/' + part + '.png', {
                 lang: 'vie',
@@ -114,7 +114,7 @@ exports.convert = async (req, res) => {
 
         if (!elements['day'] || elements['day'] < 1 || elements['day'] > 31) elements['day'] = 1
         if (!elements['month'] || elements['month'] < 1 || elements['month'] > 12) elements['month'] = 1
-        if (!elements['year'] || elements['year'] < 1945 || elements['year'] > 2100) elements['year'] = 1945
+        if (!elements['year'] || elements['year'] < 1945 || elements['year'] > 2100) elements['year'] = 2020
 
         if (elements['sns']) {
             var pos = elements['sns'].split("\n")
@@ -125,16 +125,16 @@ exports.convert = async (req, res) => {
         if (elements['type']) elements['type'] = (stringSimilarity.findBestMatch(elements['type'], docTypes).bestMatch.rating > 0.6) ? stringSimilarity.findBestMatch(elements['type'], docTypes).bestMatch.target : elements['type']
         if (elements['place']) elements['place'] = (stringSimilarity.findBestMatch(elements['place'], docPlaces).bestMatch.rating > 0.2) ? stringSimilarity.findBestMatch(elements['place'], docPlaces).bestMatch.target : elements['place']
         if (elements['position']) elements['position'] = elements['position'].split(',').map(pos =>
-            (stringSimilarity.findBestMatch(pos, docPositions).bestMatch.rating > 0.1) ? stringSimilarity.findBestMatch(pos, docPositions).bestMatch.target : pos
+            (stringSimilarity.findBestMatch(pos, docPositions).bestMatch.rating > 0.3) ? stringSimilarity.findBestMatch(pos, docPositions).bestMatch.target : pos
         ).join(', ')
         if (!elements['type']) elements['type'] = "CÔNG VĂN"
 
         //Set notification
-        elements['notify'] = { type: 'success', message: 'Xử lý dữ liệu thành công' }
+        elements['notify'] = { type: 'success', message: 'Finish!' }
         if (fs.existsSync('./src/stamp.png')) fs.unlinkSync('./src/stamp.png')
         res.send(elements)
     } catch (err) {
-        elements['notify'] = { type: 'danger', message: 'Không thể xử lý được dữ liệu' }
+        elements['notify'] = { type: 'danger', message: 'An error has occurred' }
         console.log(err)
         res.send(elements)
 
@@ -145,7 +145,7 @@ exports.convert = async (req, res) => {
 
 
 
-//FUNCTION
+//SUPPORT FUNCTION
 function reconstruct(text) { return replace(text.split("\r\n").join("\n").split("\n\n").join("\n")) }
 function replace(text) {
     return text.split("Š").join("5").split("§").join("S").split("- _").join("-").split("-_").join("-").split("~").join("-").split("ø").join("g")
