@@ -47,7 +47,7 @@ module.exports = {
         })
     },
 
-    delete_remove: (req, res) => {
+    del_remove: (req, res) => {
         documentModel.deleteMany({ keyId: req.params.id }, (err, result) => {
             if (err) {
                 res.send({ type: 'danger', message: 'Cannot remove the data' })

@@ -16,9 +16,9 @@ module.exports = (app) => {
     app.route('/api/getInfo').get(authorize, cUser.get_info)
     app.route('/api/logout').get(cUser.logout)
     app.route('/api/users').get(authorize, cUser.get_all)
-    app.route('/api/users/:id')
+    app.route('/api/users/:usr')
         .put(authorize, cUser.put_changePassword)
-        .delete(authorize, cUser.delete_remove)
+        .delete(authorize, cUser.del_remove)
     //Document
     app.route('/api/documents')
         .get(cDocument.get_all)
@@ -26,7 +26,7 @@ module.exports = (app) => {
     app.route('/api/documents/:id')
         .get(cDocument.get_image)
         .put(authorize, cDocument.put_edit)
-        .delete(authorize, cDocument.delete_remove)
+        .delete(authorize, cDocument.del_remove)
     app.route('/api/documents/:id').get(cDocument.get_stamp)
     app.route('/api/export').post(cDocument.post_export)
     //Image

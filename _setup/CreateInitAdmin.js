@@ -1,4 +1,4 @@
-const userModel = require('../models/user')
+const userModel = require('../models/userModel')
 require('../config/database')
 
 userModel.create({

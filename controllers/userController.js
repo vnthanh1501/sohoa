@@ -74,7 +74,7 @@ module.exports = {
         })
     },
     put_changePassword: (req, res) => {
-        userModel.find({ username: req.params.id }, function (err, user) {
+        userModel.find({ username: req.params.usr }, function (err, user) {
             if (err) {
                 res.send({ type: 'danger', message: 'Input problem' })
                 console.log('An error has occurred: ' + err.message)
@@ -87,12 +87,12 @@ module.exports = {
                     console.log('An error has occurred: ' + err.message)
                 }
                 res.send({ type: 'success', message: 'The password has been updated' })
-                console.log('The password of the user: ' + req.params.id + ' has been updated')
+                console.log('The password of the user: ' + req.params.usr + ' has been updated')
             });
         });
     },
-    delete_remove: (req, res) => {
-        userModel.deleteMany({ username: req.params.id }, (err, result) => {
+    del_remove: (req, res) => {
+        userModel.deleteMany({ username: req.params.usr }, (err, result) => {
             if (err) {
                 res.send({ type: 'danger', message: 'Cannot remove the user' })
                 console.log('An error has occurred: ' + err.message)
